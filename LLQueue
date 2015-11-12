@@ -1,0 +1,64 @@
+import java.util.LinkedList;
+
+/**
+ * Creates a queue of linked list nodes. 
+ * 
+ * @author Keenan Sanford
+ * @version 4/23/2014
+ */
+
+public class LLQueue<T> implements KQueue<T>{
+	LinkedList<T> linkedList;
+	
+	/**
+	 *  Constructor
+	 */
+	public LLQueue() {
+		linkedList = new LinkedList<T>();
+	}
+	
+	/**
+	 * Checks if the list is empty.
+	 * 
+	 * @return Returns true if the list is empty.
+	 */ 
+	public boolean isEmpty() {
+		boolean isEmpty = false;
+		
+		if (linkedList.size() == 0) {
+			isEmpty = true;
+		}
+		
+		return isEmpty;
+	}
+	
+	/**
+	 * Queues up a given node at the end of the list.
+	 * 
+	 * @param The added node.
+	 */
+	public void enqueue(T objectToQueue) {
+		linkedList.add(objectToQueue);
+	}
+	
+	/**
+	 * Removes the first node from the list.
+	 * 
+	 * @return The removed node.
+	 */
+	public T dequeue() {
+		T objectToDequeue = linkedList.getFirst();
+		linkedList.removeFirst();
+		return objectToDequeue;
+	}
+	
+	/**
+	 * Looks up the first node in the list.
+	 * 
+	 * @return The first node.
+	 */
+	public T peekFront() {
+		T peek = linkedList.peek();
+		return peek;
+	}
+}
