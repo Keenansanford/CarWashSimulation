@@ -1,0 +1,71 @@
+import java.util.ArrayList;
+
+//
+//    Car Wash Simulation Project:  CarWashApplication Class
+//
+//    The Car Wash Simulation Project is described in 
+//    <a href="http://max.cs.kzoo.edu/cs210/Labs/Queues/CarWashProgram.html">Car
+//    Wash Project Description</a>.
+//
+//    Authors:   Autumn C. Spaulding and Alyce Brady, Keenan Sanford
+//               based on a description by
+//               <a href="mailto:trollend@nb.net">Todd Ollendyke</a>.
+//    Date:      13 July 2000
+//    Modified:  12 October 2000
+//      Added Bay class and separated simulation behavior from main into
+//      the CarWashSimulation class.
+//    Modified:  29 October 2002
+//    Separated class templates into separate files.
+//
+
+/**
+ *  This is the main class for the Car Wash program.
+ *
+ */
+public class CarWashApplication
+{
+    /**
+     *  The main function constructs a car wash simulation and asks it to run.
+     *  @param String args[] is not used in this implementation
+     *  @return void
+     */
+    public static void main(String args[])
+    {
+    	ArrayList<String> daysOfTheWeek = new ArrayList<String>();
+    	daysOfTheWeek.add("Monday");
+    	daysOfTheWeek.add("Tuesday");
+    	daysOfTheWeek.add("Wednesday");
+    	daysOfTheWeek.add("Thursday");
+    	daysOfTheWeek.add("Friday");
+    	
+    	// Construct a simulation object and start the simulation.
+    	
+        // The car wash is open from 9am to 7pm (10 hours) and a machine
+    	// that performs washes cars in 3 minutes.
+        CarWashSimulation sim3 = new CarWashSimulation(3);
+        CarWashSimulation sim4 = new CarWashSimulation(4);
+        
+        // Runs a 3 minute wash simulation and prints the results.
+        System.out.println("******The following results are produced by a machine capable of THREE minute car washes******");
+    	for ( String s: daysOfTheWeek ) {
+    		System.out.println("Today is: " + s );
+    		sim3.run(600);
+    		sim3.printResults(sim3);
+    		sim3.reset();
+    	}
+    	
+    	// Runs a 4 minute wash simulation and prints the results.
+    	System.out.println("******The following results are produced by a machine capable of FOUR minute car washes******");
+    	for ( String s: daysOfTheWeek ) {
+    		System.out.println("Today is: " + s );
+    		sim4.run(600);
+    		sim4.printResults(sim4);
+    		sim4.reset();
+    	}
+    	
+    	
+        System.out.println("Program done.");
+
+    }    // end main
+
+}  // end class CarWashApplication class
