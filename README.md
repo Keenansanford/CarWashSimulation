@@ -17,3 +17,9 @@ An object that contains its arrival time to be used in determining relevant stat
 
 Bay,
 Keeps track of the one-car wash in terms of time till completion and queues the next one in line.
+
+LLQueue,
+The queue class I created in a previous assignment that implements KQueue.
+
+KQueue,
+The class provided by Kalamazoo College that I based the LLQueue class off.
