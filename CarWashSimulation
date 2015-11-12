@@ -1,71 +1,196 @@
-import java.util.ArrayList;
+import java.util.Random;
 
+//   Car Wash Simulation Project:  CarWashSimulation Class
 //
-//    Car Wash Simulation Project:  CarWashApplication Class
+//   The Car Wash Simulation Project is described in 
+//   <a href="http://max.cs.kzoo.edu/cs210/Labs/Queues/CarWashProgram.html">Car
+//   Wash Project Description</a>.
 //
-//    The Car Wash Simulation Project is described in 
-//    <a href="http://max.cs.kzoo.edu/cs210/Labs/Queues/CarWashProgram.html">Car
-//    Wash Project Description</a>.
-//
-//    Authors:   Autumn C. Spaulding and Alyce Brady, Keenan Sanford
-//               based on a description by
-//               <a href="mailto:trollend@nb.net">Todd Ollendyke</a>.
-//    Date:      13 July 2000
-//    Modified:  12 October 2000
-//      Added Bay class and separated simulation behavior from main into
-//      the CarWashSimulation class.
-//    Modified:  29 October 2002
-//    Separated class templates into separate files.
-//
+//   Authors:   Autumn C. Spaulding and Alyce Brady, Keenan Sanford
+//              based on a description by
+//              <a href="mailto:trollend@nb.net">Todd Ollendyke</a>.
+//   Date:      13 July 2000
+//   Modified:  12 October 2000
+//   Separated simulation behavior from main into the CarWashSimulation class.
+//   Modified:  29 October 2002
+//   Separated class templates into separate files.
+//   Modified:  27 October 2003
+//   Set up waitingLine to use LLQueue instead of QueueVector
+
+
 
 /**
- *  This is the main class for the Car Wash program.
+ *  This class is a template, or starting point, for
+ *  a class that will manage the simulation of cars arriving at a car
+ *  wash, waiting in line, and going through the wash cycle.
  *
  */
-public class CarWashApplication
+public class CarWashSimulation
 {
+    int currentTime;        // how many minutes the car wash has been open
+    int closingTime;        // when the car wash should close
+    Bay bay;                // car wash bay
+    LLQueue<Car> waitingLine;     // line of cars waiting to be washed
+    
+    int totalWaitingTime;   // total time spent waiting by all cars
+    int numCars;            // how many cars were washed
+    int numCarsInQueueOver10;
+    int numCarsAfterClosing;
+    int totalWaitingTimeAfterClosing;
+    
+    Random randGen;     // random number generator
+    
+    
     /**
-     *  The main function constructs a car wash simulation and asks it to run.
-     *  @param String args[] is not used in this implementation
-     *  @return void
+     * Construct a car wash simulation object.
+     * 
+     * @param washLength the amount of time to wash one car.
      */
-    public static void main(String args[])
+    public CarWashSimulation ( int washLength )
     {
-    	ArrayList<String> daysOfTheWeek = new ArrayList<String>();
-    	daysOfTheWeek.add("Monday");
-    	daysOfTheWeek.add("Tuesday");
-    	daysOfTheWeek.add("Wednesday");
-    	daysOfTheWeek.add("Thursday");
-    	daysOfTheWeek.add("Friday");
-    	
-    	// Construct a simulation object and start the simulation.
-    	
-        // The car wash is open from 9am to 7pm (10 hours) and a machine
-    	// that performs washes cars in 3 minutes.
-        CarWashSimulation sim3 = new CarWashSimulation(3);
-        CarWashSimulation sim4 = new CarWashSimulation(4);
+        bay = new Bay(washLength);
+        waitingLine = new LLQueue<Car>();
+        randGen = new Random();
+        closingTime = 600;
+        numCars = 0;
+        totalWaitingTime = 0;
+        numCarsInQueueOver10 = 0;
+        numCarsAfterClosing = 0;
+        totalWaitingTimeAfterClosing = 0;
+        currentTime = 0;
+    }
+
+    /** 
+     * Reset the state of the simulation for a new run.
+     */    
+    public void reset ()
+    {
+        // All times and number of cars should be reset to 0 (closingTime
+        // will be set to the appropriate value when the simulation is run).
+        // The bay and waitingLine should be reset using appropriate
+        // methods from their classes.
+    	numCars = 0;
+    	currentTime = 0;
+    	totalWaitingTime = 0;
+    	numCarsInQueueOver10 = 0;
+        numCarsAfterClosing = 0;
+        totalWaitingTimeAfterClosing = 0;
+    	bay.reset();
+    	waitingLine = new LLQueue<Car>();
+    }
+
+    /** 
+     * Run the simulation for a specified number of minutes (or whatever the
+     * unit for a single step of the simulation is).
+     * 
+     * @param minutesToRun the number of steps of the simulation to run.
+     */    
+    public void run (int minutesToRun)
+    {
+        closingTime = minutesToRun;
+
+        // Run for as many minutes as specified or until there are no cars
+        // left waiting to be washed, whichever is longer.
+        for ( int i = 0; i < minutesToRun; i++ ) {
+        	this.step();
+        }
         
-        // Runs a 3 minute wash simulation and prints the results.
-        System.out.println("******The following results are produced by a machine capable of THREE minute car washes******");
-    	for ( String s: daysOfTheWeek ) {
-    		System.out.println("Today is: " + s );
-    		sim3.run(600);
-    		sim3.printResults(sim3);
-    		sim3.reset();
+        while ( !(waitingLine.isEmpty()) && currentTime >= closingTime ) {
+        	this.stepAfterClosing();
+        }
+    }
+
+    /**
+     * Execute a single step of the simulation.
+     */
+    public void step ()
+    {
+    	// Determines (randomly) whether or not a car has arrived at the car wash.
+    	int carArrivalDeterminer = randGen.nextInt(4);
+    	boolean carArrived = false;
+    	if ( carArrivalDeterminer == 2 ) {
+    		carArrived = true;
     	}
     	
-    	// Runs a 4 minute wash simulation and prints the results.
-    	System.out.println("******The following results are produced by a machine capable of FOUR minute car washes******");
-    	for ( String s: daysOfTheWeek ) {
-    		System.out.println("Today is: " + s );
-    		sim4.run(600);
-    		sim4.printResults(sim4);
-    		sim4.reset();
+    	// If a car has arrived, construct a new car object and add it to the queue.
+    	if ( carArrived == true ) {
+    		Car arrivedCar = new Car(currentTime);
+    		waitingLine.enqueue(arrivedCar);
     	}
     	
+    	// Checks to see if car is clean and that there is another car waiting in line, 
+    	// and dequeues the finished car and starts the next car in line.
+    	if ( bay.isEmpty() && !(waitingLine.isEmpty()) ) {
+    		Car carToBay = waitingLine.dequeue();
+    		int waitingTime = currentTime - carToBay.myArrivalTime;
+    		bay.startWash();
+    		numCars++;
+    		
+    		// Checks to see if the car was in the queue for 10 or more minutes.
+    		if ( ((currentTime - carToBay.myArrivalTime) >= 10) ) {
+    			numCarsInQueueOver10++;
+    		}
+    		
+    		// Adds the amount of time that car was in the queue for to the total waiting 
+    		// time instance variable.
+    		totalWaitingTime += waitingTime;
+    	}
     	
-        System.out.println("Program done.");
+    	if ( !(bay.isEmpty()) ) {
+    		bay.keepWashing();
+    	}
+    	
+    	currentTime++;
+    }
+    
+    /**
+     * Displays the results of the lab to the reader.
+     * 
+     * @param carWashSim the CarWashSimulation that needs its results printed.
+     */
+    public void printResults(CarWashSimulation carWashSim) {
+    	
+    	// Prints out the results of this simulation.
+    	System.out.println("The average wait time of each car: " + (totalWaitingTime/numCars));
+    	System.out.println("The number of cars with over a 10 minute wait: " 
+    						+ carWashSim.numCarsInQueueOver10);
+    	System.out.println("The number of cars processed by the wash today: " + numCars);
+    	System.out.println("The total amount of waiting time: " + totalWaitingTime);
+    	System.out.println("The number of cars processed by the wash today after closing: " + numCarsAfterClosing);
+    	System.out.println("The total amount of waiting time after closing: " + totalWaitingTimeAfterClosing);
+    }
+    
+    /**
+     * Finishes processing the remaining cars in the queue after car wash has "closed".
+     */
+    public void stepAfterClosing()
+    {
+    	// Takes runs the remaining cars through the bay after closing time.
+    	boolean carWasDequeued = false;
+    	if ( bay.isEmpty() && !(waitingLine.isEmpty()) ) {
+    		Car carToBay = waitingLine.dequeue();
+    		bay.startWash();
+    		carWasDequeued = true;
+    		
+    		// Increasing the correct instance variables.
+        	numCars++;
+        	numCarsAfterClosing++;
+        	totalWaitingTime += (currentTime - carToBay.myArrivalTime);
+        	// Checks to see if the car arrived after closing time and augments the instance
+        	// variable accordingly if true.
+        	totalWaitingTimeAfterClosing += (currentTime - closingTime);
+        	
+        	// Checks to see if the car was in the queue for 10 or more minutes.
+    		if ( ((currentTime - carToBay.myArrivalTime) >= 10) && carWasDequeued ) {
+    			numCarsInQueueOver10++;
+    		}
+    	}
+    	
+    	else {
+    		bay.keepWashing();
+    	}
+		
+		currentTime++;
+    }
 
-    }    // end main
-
-}  // end class CarWashApplication class
+}    // end CarWashSimulation class
