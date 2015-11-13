@@ -4,7 +4,7 @@ A car wash simulator that emulates throughput and calculates revenue based off a
  
 This assignment was mediated by the professor and teaching assistants of the class (Dr. Gerry Howser) who aided with the coding at varying points. THE FRAMEWORK FOR THE PROGRAM WAS PROVIDED BY KALAMAZOO COLLEGE and the students were assigned to fill in the missing pieces.
 
-Below each of the components are described in detail:
+Below, each of the classes are described in detail:
 
 CarWashApplication,
 The main program that executes the other classes and prints the data.
