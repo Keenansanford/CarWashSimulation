@@ -22,4 +22,4 @@ LLQueue,
 The queue class I created in a previous assignment that implements KQueue.
 
 KQueue,
-The class provided by Kalamazoo College that I based the LLQueue class off.
+The class provided by Kalamazoo College from which I implemented the LLQueue class.
