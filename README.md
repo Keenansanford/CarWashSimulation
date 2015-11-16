@@ -6,20 +6,14 @@ This assignment was mediated by the professor and teaching assistants of the cla
 
 The classes are described in detail below:
 
-CarWashApplication,
-The main program that executes the other classes and prints the data.
+CarWashApplication - the main program that executes the other classes and prints the data.
 
-CarWashSimulation,
-The main console that runs the simulation and holds the parameters of the model such as: opening and closing times, wash time per car, average wait time per car, and how many cars were in the queue after closing. Cars were placed in the queue based off random number generation and the "probability" of a car arriving at any given minute.
+CarWashSimulation - the main console that runs the simulation and holds the parameters of the model such as: opening and closing times, wash time per car, average wait time per car, and how many cars were in the queue after closing. Cars were placed in the queue based off random number generation and the "probability" of a car arriving at any given minute.
 
-Car,
-An object that contains its arrival time to be used in determining relevant statistics.
+Car - an object that contains its arrival time to be used in determining relevant statistics.
 
-Bay,
-Keeps track of the one-car wash in terms of time till completion and queues the next one in line.
+Bay - keeps track of the one-car wash in terms of time till completion and queues the next one in line.
 
-LLQueue,
-The queue class I created in a previous assignment that implements KQueue.
+LLQueue - the queue class I created in a previous assignment that implements KQueue.
 
-KQueue,
-The class provided by Kalamazoo College from which I implemented the LLQueue class.
+KQueue - the class provided by Kalamazoo College from which I implemented the LLQueue class.
