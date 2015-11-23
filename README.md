@@ -1,6 +1,6 @@
 CarWashSimulation Summary:
 
-A car wash simulator that emulates throughput to measure washing efficiency based off a variable set of data.
+A car wash simulator that emulates throughput to measure washing efficiency based off of wash times.
  
 This assignment was mediated by the professor and teaching assistants of the class (Dr. Gerry Howser) who aided with the coding at varying points. THE FRAMEWORK FOR THE PROGRAM WAS PROVIDED BY KALAMAZOO COLLEGE and the students were assigned to fill in the missing pieces. It was written in Java using Eclipse.
 
